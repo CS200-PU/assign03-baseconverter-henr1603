@@ -124,7 +124,10 @@ Returned:      - if the number is decimal
 ***********************************************************************/
 
 string getNumber (const string& prompt) {
-
+  string myNum;
+  cout << prompt;
+  cin >> myNum;
+ return myNum;
 }
 
 /***********************************************************************
@@ -220,11 +223,9 @@ string decimalToHex (const string& strNumber) {
 
   while (decimal > 0) {
     remainder = decimal % sixteen;
-    if (remainder >= 10 && remainder <= 15) {
-      
-
-    }
+    //create a function int to char for hex 
     hex = ::to_string(remainder) + hex;
+    //need to reverse the string 
     decimal /= sixteen;
   }
 
