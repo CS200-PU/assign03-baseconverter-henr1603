@@ -21,6 +21,7 @@ const int TWO = 2;
 //default fucntions 
 
 int hexCharToInt (char hexDigit);
+char intToHexChar (int intConvert);
 char getBase (const string& strNumber);
 string getNumber (const string& prompt);
 void printTitle (const string& myTitle);
@@ -76,6 +77,31 @@ int hexCharToInt (char hexDigit) {
     return -1;
   }
 
+}
+
+/***********************************************************************
+Function:     intToHexchar
+
+Description:  Converting an integer to a hex char
+
+Parameters:   intConvert - the int passed in to be converted 
+
+Returned:     char - the char that was converted
+***********************************************************************/
+char intToHexChar (int intConvert) {
+  int ten = 10;
+
+  if (intConvert >= 0 && intConvert <= 9) {
+    return '0' + (intConvert);
+  }
+
+  if (intConvert >= 10 && intConvert <= 15) {
+    return 'A' + (intConvert - ten);
+  }
+
+  else {
+    return -1;
+  }
 }
 
 /***********************************************************************
@@ -223,8 +249,8 @@ string decimalToHex (const string& strNumber) {
 
   while (decimal > 0) {
     remainder = decimal % sixteen;
-    //create a function int to char for hex 
-    hex = ::to_string(remainder) + hex;
+    intToHexChar(remainder);
+    hex = ::to_string(intToHexChar(remainder)) + hex;
     //need to reverse the string 
     decimal /= sixteen;
   }
