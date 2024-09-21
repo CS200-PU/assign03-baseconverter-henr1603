@@ -1,12 +1,12 @@
 //******************************************************************************
 // File name:   main.cpp
-// Author:      CS Faculty
+// Author:      AaJanae Henry
 // Date:        09/14/2024
-// Class:       CS200- AaJanae Henry
+// Class:       CS200
 // Assignment:  Base Converter
 // Purpose:     Convert numbers entered by users to a decimal, binary, or
 //              hexadecimal
-// Hours:       
+// Hours:       27
 //******************************************************************************
 
 #include <iostream>
@@ -14,17 +14,20 @@
 #include <iomanip>
 #include <string>
 #include <cmath>
+#include <algorithm>
 
 using namespace std;
 
 const int TWO = 2;
+
 //default fucntions 
 
+void printTitle (const string& myTitle);
+void choiceConversion (const string& input, const string& choice);
 int hexCharToInt (char hexDigit);
 char intToHexChar (int intConvert);
 char getBase (const string& strNumber);
 string getNumber (const string& prompt);
-void printTitle (const string& myTitle);
 string binaryToDecimal (const string& strNumber);
 string decimalToBinary (const string& strNumber);
 string decimalToHex (const string& strNumber);
@@ -45,43 +48,83 @@ Returned:     return status
 
 int main () {
 
-  const string myTitle = "*****HEX-DECIMAL-BINARY CONVERTER*****";
-  const string number = "Enter your string to convert (q to quit): ";
+  const string MY_TITLE = "*****HEX-DECIMAL-BINARY CONVERTER*****";
+  const string NUMBER = "Enter your string to convert (q to quit): ";
   string input = "";
+  string choice = "";
+  string endProgram = "q";
+  
+  printTitle(MY_TITLE);
 
-  printTitle(myTitle);
+  while (choice != endProgram) {
 
-  input = getNumber (number);
+    input = getNumber(NUMBER);
+    choice = getBase(input);
 
-  getBase(input);
+    if(choice != endProgram) {
+      choiceConversion(input,choice);
+    }
+  }
+  return EXIT_SUCCESS;
+}
 
-  if (getBase(input) == 'D') {
+/***********************************************************************
+Function:     choiceConversion
+
+Description:  gets the choice from the user and prints out the conversion
+              options for the user 
+
+Parameters:   input - the number entered from the user
+              choice - which number to do the conversions for 
+
+Returned:     none
+***********************************************************************/
+
+void choiceConversion (const string& input, const string& choice) {
+
+  string decimal = "D";
+  string hexaDecimal = "H";
+  string binary = "B";
+
+  if (choice == decimal) {
     cout << "The binary conversion is: " << decimalToBinary(input) << endl;
     
-    cout << "The hexadecimal conversion is: " << decimalToHex(input) << endl;
+    cout << "The hexadecimal conversion is: " << decimalToHex(input) 
+         << endl << endl;
     
   }
 
-  if (getBase(input) == 'B') {
+  else if (choice == binary) {
     cout << "The decimal conversion is: " << binaryToDecimal(input) << endl;
     
-    //cout << "The hexadecimal conversion is: " << binaryToHex(input) << endl;
+    cout << "The hexadecimal conversion is: " << binaryToHex(input) 
+         << endl << endl;
     
   }
 
-  if (getBase(input) == 'D') {
-    cout << "The decimal conversion is: " << decimalToBinary(input) << endl;
+  else if (choice == hexaDecimal) {
+    cout << "The decimal conversion is: " << hexToDecimal(input) << endl;
     
-    cout << "The binary conversion is: " << decimalToHex(input) << endl;
-    
+    cout << "The binary conversion is: " << hexToBinary(input) 
+         << endl << endl;
   }
+}
 
- 
+/***********************************************************************
+Function:     printTitle 
 
+Description:  prints the title of the program  
 
-  
-  
-  return EXIT_SUCCESS;
+Parameters:   myTitle - the title to print
+
+Returned:     none
+***********************************************************************/
+
+void printTitle (const string& myTitle) {
+
+  cout << "**************************************" << endl;
+  cout << myTitle << endl;
+  cout << "**************************************" << endl;
 }
 
 /***********************************************************************
@@ -95,20 +138,20 @@ Returned:     int - the integer that was the end of conversion
 ***********************************************************************/
 
 int hexCharToInt (char hexDigit) {
+
   int ten = 10;
 
-  if (hexDigit >= 0 && hexDigit <= 9) {
-    return hexDigit - 0;
+  if (hexDigit >= '0' && hexDigit <= '9') {
+    return hexDigit - '0';
   }
 
-  if (hexDigit >= 'A' && hexDigit <= 'F') {
+  else if (hexDigit >= 'A' && hexDigit <= 'F') {
     return hexDigit - 'A' + ten;
   }
 
   else {
     return -1;
   }
-
 }
 
 /***********************************************************************
@@ -120,15 +163,17 @@ Parameters:   intConvert - the int passed in to be converted
 
 Returned:     char - the char that was converted
 ***********************************************************************/
+
 char intToHexChar (int intConvert) {
+
   int ten = 10;
 
   if (intConvert >= 0 && intConvert <= 9) {
-    return '0' + (intConvert);
+    return '0' + intConvert;
   }
 
   if (intConvert >= 10 && intConvert <= 15) {
-    return 'A' + (intConvert - ten);
+    return 'A' + intConvert - ten;
   }
 
   else {
@@ -148,6 +193,7 @@ Parameters:   strNumber - the string representing a decimal, hexadecimal,
 Returned:     D - if the number is decimal
               H - if the number is a hexadecimal 
               B - if the number is binary 
+              q - if user is ending program
 ***********************************************************************/
 
 char getBase (const string& strNumber) {
@@ -155,53 +201,43 @@ char getBase (const string& strNumber) {
   char hex = 'H';
   char decimal = 'D';
   char binary = 'B';
+  char quit = 'q';
 
   if (strNumber[0] == '0' && strNumber[1] == 'x') {
     return hex;
   }
 
-  if (strNumber[0] == '0' && strNumber[1] == 'b') {
+  else if (strNumber[0] == '0' && strNumber[1] == 'b') {
     return binary;
   }
 
-  return decimal;
-  
+  else if (strNumber[0] == 'q') {
+    return quit;
+  }
+
+  else {
+    return decimal;
+  }
 }
 
 /***********************************************************************
 Function:     getNumber
 
 Description:  returns a string that represents a decimal, hexadecimal,
-              or binary number 
+              or binary number from the user
 
 Parameters:   prompt - the user input 
 
-Returned:     the string prompt
+Returned:     the number entered
 ***********************************************************************/
 
 string getNumber (const string& prompt) {
+
   string myNum;
   cout << prompt;
   cin >> myNum;
- return myNum;
-}
 
-/***********************************************************************
-Function:     printTitle 
-
-Description:  prints the title of the program  
-
-Parameters:   myTitle - the title to print
-
-Returned:     none
-***********************************************************************/
-
-void printTitle (const string& myTitle) {
-
-  cout << "**************************************" << endl;
-  cout << myTitle << endl;
-  cout << "**************************************" << endl;
-
+  return myNum;
 }
 
 /***********************************************************************
@@ -215,15 +251,16 @@ Returned:     std::to_string(calculate) - the decimal converted as string
 ***********************************************************************/
 
 string binaryToDecimal (const string& strNumber) {
+
  int calculate = 0;
  int length = strNumber.size();
 
-  for (int i = 2; i < length; ++i){
-
+  for (int i = TWO; i < length; ++i) {
     if (strNumber[i] == '1') {
       calculate += pow(TWO, length - i - 1);
     }
   }
+
   return std::to_string(calculate);
 }
 
@@ -238,9 +275,10 @@ Returned:     binary - the binary we converted from the decimal
 ***********************************************************************/
 
 string decimalToBinary (const string& strNumber) {
+
   int decimal = stoi(strNumber);
   int remainder = 0; 
-  string binary = "0b";
+  string binary = "";
   
   if (decimal == 0) {
     return "0b0";
@@ -248,11 +286,13 @@ string decimalToBinary (const string& strNumber) {
 
   while (decimal > 0) {
     remainder = decimal % TWO;
-    binary += ::to_string(remainder);
+    binary += std::to_string(remainder);
     decimal /= TWO;
   }
 
-  return binary;
+  reverse(binary.begin(), binary.end());
+
+  return "0b" + binary;
 }
 
 /***********************************************************************
@@ -266,10 +306,11 @@ Returned:     hex - the hexadecimal we converted from the decimal
 ***********************************************************************/
 
 string decimalToHex (const string& strNumber) {
+
   int decimal = stoi(strNumber);
   int remainder = 0; 
   int sixteen = 16;
-  string hex = "0x";
+  string hex = "";
   
   if (decimal == 0) {
     return "0x0";
@@ -277,11 +318,13 @@ string decimalToHex (const string& strNumber) {
 
   while (decimal > 0) {
     remainder = decimal % sixteen;
-    hex += ::to_string(intToHexChar(remainder));
+    hex += intToHexChar(remainder);
     decimal /= sixteen;
   }
 
-  return hex;
+  reverse(hex.begin(), hex.end());
+
+  return "0x" + hex;
 }
 
 /***********************************************************************
@@ -295,37 +338,51 @@ Returned:     decimal - the decimal we converted from the hexadecimal
 ***********************************************************************/
 
 string hexToDecimal (const string& strNumber) {
-  int decimal = stoi(strNumber, nullptr, 16);
-  
-  string decimalString = to_string(decimal);
 
-  return decimalString;
+  int length = strNumber.size();
+  int decimal = 0;
+  int sixteen = 16;
+  
+  for (int i = TWO; i < length; ++i) {
+    int hexValue = hexCharToInt((strNumber[i]));
+    decimal +=  hexValue * (pow (sixteen, length - i -1));
+  }
+
+  return std::to_string(decimal);
 }
 
 /***********************************************************************
-Function:     hexToDecimal  
+Function:     hexToBinary  
 
-Description:  converts the pased in hexadecimal to decimal 
+Description:  converts the pased in hexadecimal to decimal then to binary
 
 Parameters:   strNumber - the hexadecimal number passed in 
 
-Returned:     decimal - the decimal we converted from the hexadecimal 
+Returned:     decimalToBinary(decimal) - the function that converts the 
+                                         decimal to a binary
 ***********************************************************************/
 
 string hexToBinary (const string& strNumber) {
 
+  string decimal = hexToDecimal(strNumber);
+
+  return decimalToBinary(decimal);
 }
 
 /***********************************************************************
-Function:     hexToDecimal  
+Function:     binaryToHex  
 
-Description:  converts the pased in hexadecimal to decimal 
+Description:  converts the pased in binary to decimal then to hexadecimal
 
-Parameters:   strNumber - the hexadecimal number passed in 
+Parameters:   strNumber - the binary number passed in 
 
-Returned:     decimal - the decimal we converted from the hexadecimal 
+Returned:     decimalToHex(decimal) - the function that converts the 
+                                      decimal to a hexadecimal 
 ***********************************************************************/
 
 string binaryToHex (const string& strNumber) {
 
+  string decimal = binaryToDecimal(strNumber);
+
+  return decimalToHex(decimal);
 }
