@@ -18,7 +18,15 @@
 
 using namespace std;
 
+const int ONE = 1;
 const int TWO = 2;
+const int NINE = 9;
+const int TEN = 10;
+const int NEG_ONE = -1;
+const char LETTER_A = 'A';
+const char LETTER_F = 'F';
+const string HEXADECIMAL = "0x";
+const string BINARY = "0b";
 
 //default fucntions 
 
@@ -139,18 +147,18 @@ Returned:     int - the integer that was the end of conversion
 
 int hexCharToInt (char hexDigit) {
 
-  int ten = 10;
+  char nine = '9';
 
-  if (hexDigit >= '0' && hexDigit <= '9') {
+  if (hexDigit >= '0' && hexDigit <= nine) {
     return hexDigit - '0';
   }
 
-  else if (hexDigit >= 'A' && hexDigit <= 'F') {
-    return hexDigit - 'A' + ten;
+  else if (hexDigit >= LETTER_A && hexDigit <= LETTER_F) {
+    return hexDigit - LETTER_A + TEN;
   }
 
   else {
-    return -1;
+    return NEG_ONE;
   }
 }
 
@@ -166,18 +174,18 @@ Returned:     char - the char that was converted
 
 char intToHexChar (int intConvert) {
 
-  int ten = 10;
+  int fifteen = 15;
 
-  if (intConvert >= 0 && intConvert <= 9) {
+  if (intConvert >= 0 && intConvert <= NINE) {
     return '0' + intConvert;
   }
 
-  if (intConvert >= 10 && intConvert <= 15) {
-    return 'A' + intConvert - ten;
+  if (intConvert >= TEN && intConvert <= fifteen) {
+    return LETTER_A + intConvert - TEN;
   }
 
   else {
-    return -1;
+    return NEG_ONE;
   }
 }
 
@@ -202,16 +210,18 @@ char getBase (const string& strNumber) {
   char decimal = 'D';
   char binary = 'B';
   char quit = 'q';
-
-  if (strNumber[0] == '0' && strNumber[1] == 'x') {
+  char letterB = 'b';
+  char letterX = 'x';
+  
+  if (strNumber[0] == '0' && strNumber[ONE] == letterX) {
     return hex;
   }
 
-  else if (strNumber[0] == '0' && strNumber[1] == 'b') {
+  else if (strNumber[0] == '0' && strNumber[ONE] == letterB) {
     return binary;
   }
 
-  else if (strNumber[0] == 'q') {
+  else if (strNumber[0] == quit) {
     return quit;
   }
 
@@ -254,10 +264,11 @@ string binaryToDecimal (const string& strNumber) {
 
  int calculate = 0;
  int length = strNumber.size();
+ char one = '1';
 
   for (int i = TWO; i < length; ++i) {
-    if (strNumber[i] == '1') {
-      calculate += pow(TWO, length - i - 1);
+    if (strNumber[i] == one) {
+      calculate += pow(TWO, length - i - ONE);
     }
   }
 
@@ -281,7 +292,7 @@ string decimalToBinary (const string& strNumber) {
   string binary = "";
   
   if (decimal == 0) {
-    return "0b0";
+    return BINARY + '0';
   }
 
   while (decimal > 0) {
@@ -292,7 +303,7 @@ string decimalToBinary (const string& strNumber) {
 
   reverse(binary.begin(), binary.end());
 
-  return "0b" + binary;
+  return BINARY + binary;
 }
 
 /***********************************************************************
@@ -313,7 +324,7 @@ string decimalToHex (const string& strNumber) {
   string hex = "";
   
   if (decimal == 0) {
-    return "0x0";
+    return HEXADECIMAL + '0';
   }
 
   while (decimal > 0) {
@@ -324,7 +335,7 @@ string decimalToHex (const string& strNumber) {
 
   reverse(hex.begin(), hex.end());
 
-  return "0x" + hex;
+  return HEXADECIMAL + hex;
 }
 
 /***********************************************************************
@@ -345,7 +356,7 @@ string hexToDecimal (const string& strNumber) {
   
   for (int i = TWO; i < length; ++i) {
     int hexValue = hexCharToInt((strNumber[i]));
-    decimal +=  hexValue * (pow (sixteen, length - i -1));
+    decimal +=  hexValue * (pow (sixteen, length - i - ONE));
   }
 
   return std::to_string(decimal);
